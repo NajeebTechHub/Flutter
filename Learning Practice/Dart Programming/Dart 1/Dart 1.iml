@@ -1,0 +1,12 @@
+import 'dart:io';
+
+void main() {
+ int a,b,c;
+ a=80;
+ b=90;
+ print('before swapping \n a = $a b =$b');
+ c=a;
+ a=b;
+ b=c;
+ print('after swapping \n a = $a b =$b');
+}
