@@ -11,5 +11,5 @@ void devide(int a, int b) {
 }
 
 void main() {
-  devide(10, 0);
+  devide(10, 6);
 }
