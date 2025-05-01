@@ -27,7 +27,7 @@ class student {
     if (marks < 0) {
       print('invalid');
     } else {
-      smarks = marks;
+      marks = smarks;
     }
   }
 
