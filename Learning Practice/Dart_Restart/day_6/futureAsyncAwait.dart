@@ -11,10 +11,10 @@ Future<bool> login(String inputuserName, String inputPassword) async {
       print('login successful');
       return true;
     } else {
-      throw Exception('login failed, invalid credential');
+      throw Exception('invalid credential');
     }
   } catch (e) {
-    print('Error : $e');
+    print('Login failed, please try again');
     return false;
   }
 }
@@ -27,15 +27,14 @@ Future<String> fetchData(String userName, String password) async {
     'Name': userName,
     'age': 21,
     'address': 'mardan',
-    'phone': 03123456678,
-    'email': 'anjumnajeeb@gmail.com'
+    'phone': '03123456678',
+    'email': 'anjumnajeeb758@gmail.com'
   };
 
   print('Data fetching...');
   await Future.delayed(Duration(seconds: 3));
   try {
     if (isLogin) {
-      // print('$userData');
       return '''
 Name    : ${userData['Name']}
 Age     : ${userData['age']}
