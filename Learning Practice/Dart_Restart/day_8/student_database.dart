@@ -27,7 +27,7 @@ Average : ${student.average}
 
   void searchByName(String inputName) {
     for (var student in students) {
-      if (student.name == inputName) {
+      if (student.name.toLowerCase() == inputName.toLowerCase()) {
         print('''
 Name    : ${student.name}
 Roll No : ${student.rollNo}
