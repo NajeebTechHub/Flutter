@@ -1,0 +1,9 @@
+{
+    "homeAppBar" : "Note List",
+    "addNoteBar" : "Add Note",
+    "changeTheme" : "change theme",
+    "title" : "title",
+    "description" : "description",
+    "addNote" : "add note",
+    "settings" : "Settings"
+}

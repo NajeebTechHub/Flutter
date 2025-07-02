@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_practice1/screens/myhome.dart';
-import 'package:flutter_practice1/screens/secondpage.dart';
-import 'package:flutter_practice1/screens/thirdpage.dart';
+
+import '../screens/themeChangeWithBtn/myhome.dart';
+import '../screens/themeChangeWithBtn/secondpage.dart';
+import '../screens/themeChangeWithBtn/thirdpage.dart';
 
 class AppRoute{
   static Route<dynamic> generateRoute(RouteSettings settings, VoidCallback toggleTheme){
