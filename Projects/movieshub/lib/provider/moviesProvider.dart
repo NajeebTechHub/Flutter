@@ -26,5 +26,13 @@ class MoviesProvider with ChangeNotifier {
     }
   }
 
+  Future<void> searchTrailer(String query)async{
+    if(query.isNotEmpty){
+      await ApiServices().getMovieTrailer(query);
+    }else{
+      throw Exception('empty name');
+    }
+  }
+
 
 }

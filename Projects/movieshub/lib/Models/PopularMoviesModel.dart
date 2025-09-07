@@ -148,7 +148,7 @@ Results copyWith({  bool? adult,
   bool? video,
   num? voteAverage,
   num? voteCount,
-}) => Results(  adult: adult ?? _adult,
+}) => Results(adult: adult ?? _adult,
   backdropPath: backdropPath ?? _backdropPath,
   genreIds: genreIds ?? _genreIds,
   id: id ?? _id,
@@ -196,5 +196,4 @@ Results copyWith({  bool? adult,
     map['vote_count'] = _voteCount;
     return map;
   }
-
 }

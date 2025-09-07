@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:movieshub/Models/PopularMoviesModel.dart';
+import 'package:movieshub/Models/YoutubeSearchTrailor.dart';
+import 'package:movieshub/Services/ApiServices.dart';
 import 'package:movieshub/colors.dart';
-import 'package:movieshub/provider/moviesProvider.dart';
-import 'package:provider/provider.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieDetails extends StatefulWidget {
@@ -15,24 +16,43 @@ class MovieDetails extends StatefulWidget {
 }
 
 class _MovieDetailsState extends State<MovieDetails> {
+  YoutubePlayerController? _controller;
+
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-      () => Provider.of<MoviesProvider>(
-        context,
-        listen: false,
-      ).fetchPopularMovies(),
-    );
+
+    // ✅ Sirf ek hi baar trailer fetch karo
+    ApiServices().getMovieTrailer(widget.movie.title ?? "").then((trailer) {
+      if (trailer.videoId.isNotEmpty) {
+        setState(() {
+          _controller = YoutubePlayerController(
+            initialVideoId: trailer.videoId,
+            flags: const YoutubePlayerFlags(
+              autoPlay: false,
+              mute: false,
+            ),
+          );
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
         child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
@@ -40,92 +60,101 @@ class _MovieDetailsState extends State<MovieDetails> {
                   'https://image.tmdb.org/t/p/w500${widget.movie.posterPath}',
                 ),
               ),
-              SizedBox(height: 16),
-              Container(
-                alignment: Alignment.centerLeft,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${widget.movie.title}',
-                      style: TextStyle(
-                        color: AppColors.textYellow,
-                        fontSize: 20,
-                        decoration: TextDecoration.none,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Text(
-                          'Release Date: ',
-                          style: TextStyle(
-                            color: AppColors.textWhite,
-                            fontSize: 12,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                        Text(
-                          '${widget.movie.releaseDate}',
-                          style: TextStyle(
-                            color: AppColors.textGrey,
-                            fontSize: 12,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                      ],
-                    ),
+              const SizedBox(height: 16),
 
-                    SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Text(
-                          'Rating:',
-                          style: TextStyle(
-                            color: AppColors.textWhite,
-                            fontSize: 12,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                        SizedBox(width: 4),
-                        Icon(
-                          CupertinoIcons.star_fill,
-                          size: 14,
-                          color: AppColors.textYellow,
-                        ),
-                        SizedBox(width: 4),
-                        Text(
-                          '${(widget.movie.voteAverage)?.toStringAsFixed(1)}',
-                          style: TextStyle(
-                            color: AppColors.textGrey,
-                            fontSize: 12,
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
-                      ],
+              Text(
+                widget.movie.title ?? "",
+                style: const TextStyle(
+                  color: Colors.amber,
+                  fontSize: 20,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              Row(
+                children: [
+                  const Text(
+                    'Release Date: ',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      decoration: TextDecoration.none,
                     ),
-                    SizedBox(height: 16),
-                    Text(
-                      '${(widget.movie.overview)}',
-                      style: TextStyle(
-                        color: AppColors.textGrey,
-                        fontSize: 12,
-                        decoration: TextDecoration.none,
-                      ),
+                  ),
+                  Text(
+                    widget.movie.releaseDate ?? "",
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                      decoration: TextDecoration.none,
                     ),
-                    SizedBox(height: 16),
-                    Text(
-                      'Watch Trailer',
-                      style: TextStyle(
-                        color: AppColors.textWhite,
-                        fontSize: 18,
-                        decoration: TextDecoration.none,
-                      ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 8),
+
+              Row(
+                children: [
+                  const Text(
+                    'Rating: ',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      decoration: TextDecoration.none,
                     ),
-                    SizedBox(height: 16),
-                    YoutubePlayer(
-                        controller: controller)
-                  ],
+                  ),
+                  const Icon(
+                    CupertinoIcons.star_fill,
+                    size: 14,
+                    color: Colors.amber,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    (widget.movie.voteAverage)?.toStringAsFixed(1) ?? "N/A",
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              Text(
+                widget.movie.overview ?? "",
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              const Text(
+                "Watch Trailer",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              _controller == null
+                  ? const Center(
+                child: CircularProgressIndicator(),
+              )
+                  : YoutubePlayer(
+                controller: _controller!,
+                showVideoProgressIndicator: true,
+                progressColors: ProgressBarColors(
+                  playedColor: Colors.redAccent,
+                  handleColor: Colors.red,
                 ),
               ),
             ],
