@@ -179,7 +179,7 @@ class _MoviesScreenState extends State<MoviesScreen> {
                         shrinkWrap: true,
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          childAspectRatio: .47,
+                          childAspectRatio: .46,
                           mainAxisSpacing: 6,
                           crossAxisSpacing: 6,
                         ),
@@ -191,7 +191,6 @@ class _MoviesScreenState extends State<MoviesScreen> {
                           String? releaseYear = releaseDate != null && releaseDate.isNotEmpty
                               ? releaseDate.substring(0, 4)
                               : null;
-
                           return GestureDetector(
                             onTap: (){
                               Navigator.of(context).push(MaterialPageRoute(builder: (context){

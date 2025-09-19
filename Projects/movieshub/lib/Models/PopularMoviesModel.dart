@@ -17,12 +17,13 @@ class PopularMoviesModel {
 
   PopularMoviesModel.fromJson(dynamic json) {
     _page = json['page'];
+
     if (json['results'] != null) {
-      _results = [];
-      json['results'].forEach((v) {
-        _results?.add(Results.fromJson(v));
-      });
+      _results = (json['results'] as List)
+          .map((v) => Results.fromJson(v))
+          .toList();
     }
+
     _totalPages = json['total_pages'];
     _totalResults = json['total_results'];
   }
@@ -54,7 +55,6 @@ PopularMoviesModel copyWith({  num? page,
     map['total_results'] = _totalResults;
     return map;
   }
-
 }
 
 /// adult : false

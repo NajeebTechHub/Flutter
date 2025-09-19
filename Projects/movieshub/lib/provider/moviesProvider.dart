@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:movieshub/Models/PopularMoviesModel.dart';
+import 'package:flutter/cupertino.dart';
+
+import '../Models/PopularMoviesModel.dart';
 import '../Services/ApiServices.dart';
 
 class MoviesProvider with ChangeNotifier {
-  List _movies = [];
+  List<Results> _movies = [];
   List<Results> _moviesList = [];
 
-  List get movies => _movies;
-  List get moviesList => _moviesList;
+  List<Results> get movies => _movies;
+  List<Results> get moviesList => _moviesList;
 
   Future<void> fetchPopularMovies() async {
     final result = await ApiServices().getPopularMovies();
@@ -21,18 +22,27 @@ class MoviesProvider with ChangeNotifier {
       await fetchPopularMovies();
     } else {
       final result = await ApiServices().searchMovies(query);
-      _movies = result.results ?? [];
+      _movies = result.results
+          ?.map((movie) => Results(
+        id: movie.id,
+        title: movie.title,
+        overview: movie.overview,
+        posterPath: movie.posterPath,
+        releaseDate: movie.releaseDate,
+      ))
+          .toList() ??
+          [];
+
       notifyListeners();
     }
   }
 
-  Future<void> searchTrailer(String query)async{
-    if(query.isNotEmpty){
+
+  Future<void> searchTrailer(String query) async {
+    if (query.isNotEmpty) {
       await ApiServices().getMovieTrailer(query);
-    }else{
+    } else {
       throw Exception('empty name');
     }
   }
-
-
 }
